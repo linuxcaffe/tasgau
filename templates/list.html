@@ -1,0 +1,11 @@
+<tbody id="table-body">
+    {% for item in data %}
+    <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ relative_date(item.entry) }}</td>
+        <td>{{ item.project }}</td>
+        <td>{{ item.description }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+

@@ -6,7 +6,7 @@ import subprocess
 import sys
 from datetime import datetime
 
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for
 
 app = Flask(__name__)
 app.secret_key="insecure secret key that needs to be changed"
@@ -69,11 +69,14 @@ def index():
     return render_template("index.html", data=items, relative_date=relative_date, title="Next Tasks")
 
 
+@app.route('/tasks/create')
+def tasks_create():
+    return render_template("create-task.html", title="Create Task")
+
+
 @app.route('/tasks/add', methods=['POST'])
 def add_task():
     task = request.form.get('task')
-    print(f"{task!r}")
-    
     result = subprocess.run([
         "task", "add", *shlex.split(task)
     ], capture_output=True)
@@ -81,17 +84,7 @@ def add_task():
         raise ValueError('x')
 
     flash(result.stdout.decode('utf-8'))
-    
-    result = subprocess.run([
-        "task", "export", "next"
-    ], capture_output=True)
-    if result.returncode != 0:
-        raise ValueError('x')
-
-    items = parse_tasks(result.stdout)
-    print(items[0])
-    
-    return render_template("list.html", data=items, relative_date=relative_date, title="Next Tasks")
+    return redirect(url_for('index'))
 
 
 

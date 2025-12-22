@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form action="/tasks/add" method="post">
+    <div class="form-group">
+	<input type="text" id="task-input" name="task" placeholder="Add task..." required>
+	<button type="submit">Add</button>
+    </div>
+</form>
+
+{% endblock %}

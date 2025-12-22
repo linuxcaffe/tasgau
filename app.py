@@ -65,13 +65,36 @@ def index():
         raise ValueError('x')
 
     items = parse_tasks(result.stdout)
-    print(items[0])
     return render_template("index.html", data=items, relative_date=relative_date, title="Next Tasks")
 
 
 @app.route('/tasks/create')
 def tasks_create():
     return render_template("create-task.html", title="Create Task")
+
+
+@app.route('/tasks/complete', methods=['PUT'])
+def tasks_complete():
+    """Mark the given tasks as complete."""
+    task_ids = [int(t) for t in request.form.getlist("selected_task_ids")]
+
+    result = subprocess.run([
+        "task", ",".join(str(t) for t in task_ids), "done"
+    ], capture_output=True)
+    if result.returncode != 0:
+        raise ValueError('x')
+
+    flash(result.stdout.decode("utf-8"))
+
+    result = subprocess.run([
+        "task", "export", "next"
+    ], capture_output=True)
+    if result.returncode != 0:
+        raise ValueError('x')
+
+    items = parse_tasks(result.stdout)
+    return render_template("index.html", data=items, relative_date=relative_date, title="Next Tasks")
+
 
 
 @app.route('/tasks/add', methods=['POST'])

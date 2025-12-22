@@ -7,3 +7,6 @@ requires-python = ">=3.14"
 dependencies = [
     "flask>=3.1.2",
 ]
+
+[dependency-groups]
+deploy = ["gunicorn"]

@@ -19,15 +19,28 @@
                 {% for task in data %}
                 <tr>
         	    <td>
-        		<input type="checkbox" 
+        		<input type="checkbox"
         		       name="selected_task_ids"
         		       value="{{ task.id }}">
         	    </td>
                     <td class="id-col">{{ task.id }}</td>
                     <td class="age-col">{{ relative_date(task.entry) }}</td>
         	    <td>
-        		    <span="project">{{ task.project }}</span>
-        		    <span="description">{{ task.description }}</span>
+        		    <p class="description">{{ task.description }}</p>
+                            {%- if task.project %}
+                            <p class="pill">
+                              <span class="icon">{% include "svg/list.svg" %} </span>
+                              <span>{{ task.project }}</span>
+                            </p>
+                            {%- endif %}
+                            {%- if task.tags %}
+                              {%- for tag in task.tags %}
+                                <p class="pill">
+                                  <span class="icon">{% include "svg/tag.svg" %} </span>
+                                  <span>{{ tag }}</span>
+                                </p>
+                              {%- endfor %}
+                            {%- endif %}
         	    </td>
                 </tr>
                 {% endfor %}

@@ -122,6 +122,15 @@ def index():
     return render_template("index.html", data=items, relative_date=relative_date, title="Next Tasks")
 
 
+@app.route('/task/<task_id>')
+def task_info(task_id):
+    """Show detailed information about a task"""
+    command = TaskCommand("info", filter=[str(task_id)])
+    result = command.run().decode("utf-8")
+
+    return render_template("task-info.html", info=result, title=f"Task {task_id}")
+
+
 @app.route('/tasks/create')
 def tasks_create():
     return render_template("create-task.html", title="Create Task")

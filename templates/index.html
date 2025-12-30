@@ -24,7 +24,7 @@
                    name="selected_task_ids"
                    value="{{ task.id }}">
           </td>
-          <td class="id-col">{{ task.id }}</td>
+          <td class="id-col"><a href="/task/{{ task.id }}">{{ task.id }}</a></td>
           <td class="age-col">{{ relative_date(task.entry) }}</td>
           <td class="project-col">
             {%- if task.project %}
@@ -51,5 +51,4 @@
     </table>
   </div>
 </form>
-<a id="create-task-btn" href="/tasks/create">+</a>
 {% endblock %}

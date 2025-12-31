@@ -1,30 +1,23 @@
 {% extends "layout.html" %}
 {% block body %}
-<div>
-  <h3>Search</h3>
-  <form class="form-grid" action="/" method="GET">
-      <label for="search-query">Query</label>
-      <input id="search-query"
-             type="search"
-             name="query"
-             placeholder="Search tasks..."
-             {%- if query %}value="{{ query }}" {%- endif %}
-             />
-      <label for="search-report">Report</label>
-      <select id="search-report" name="report">
-        {%- for name in ['next', 'all'] %}
-        <option value="{{ name }}" {%- if name == report %}selected{%- endif %}>{{ name.capitalize() }}</option>
-        {%- endfor %}
-      </select>
-      <button type="submit">Search</button>
-  </form>
+
+<dialog id="task-search">
+  <div>
+    {% include "task-search.html" %}
+  </div>
+</dialog>
+
+<div style="display: flex; gap: 1em; align-items: baseline;">
+  {% if query %} <p>Current filter: {{query}}</p>{% endif %}
+  <button onclick="document.querySelector('#task-search').showModal()">
+    Edit Filter
+  </button>
 </div>
 
-<div style="margin-top: 4em">
-  <h3 style="margin-bottom: 2em">Results</h3>
+
+<div>
   <form hx-on::after-request="if(event.detail.successful) this.reset()">
     <div class="table-actions">
-
       <div>
         <input type="text" name="mods" placeholder="Modifiers..." />
         <button hx-put="/tasks/modify">

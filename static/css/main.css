@@ -66,6 +66,27 @@ body {
     overflow: hidden;
 }
 
+dialog[open] {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    place-content: center;
+    align-items: center;
+    border: none;
+    background: none;
+    backdrop-filter: blur(2px);
+    max-width: none;
+    max-height: none;
+}
+
+dialog > div {
+    padding: 2em;
+    background: var(--bg-sidebar);
+    color: var(--fg-sidebar);
+    border: solid 1px var(--border-color);
+    border-radius: 3px;
+}
+
 main {
     padding: 0.5em;
     flex-grow: 1;
@@ -172,7 +193,7 @@ tbody tr:last-child td {
     font-size: 0.8rem;
     background: var(--fg-accent);
     color: white;
-    border-radius: 4px;
+    border-radius: 3px;
     border: solid 1px var(--fg-accent-bright);
 }
 

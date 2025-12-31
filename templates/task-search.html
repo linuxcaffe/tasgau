@@ -1,0 +1,17 @@
+<h3 style="margin-bottom: 1em;">Search Tasks</h3>
+<form class="form-grid" action="/" method="GET">
+    <label for="search-query">Query</label>
+    <input id="search-query"
+           type="search"
+           name="query"
+           placeholder="Search tasks..."
+           {%- if query %}value="{{ query }}" {%- endif %}
+           />
+    <label for="search-report">Report</label>
+    <select id="search-report" name="report">
+      {%- for name in ['next', 'all'] %}
+      <option value="{{ name }}" {%- if name == report %}selected{%- endif %}>{{ name.capitalize() }}</option>
+      {%- endfor %}
+    </select>
+    <button type="submit">Search</button>
+</form>

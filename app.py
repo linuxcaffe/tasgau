@@ -7,7 +7,7 @@ import sys
 from datetime import datetime
 from logging.config import dictConfig
 
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, make_response
 
 dictConfig({
     'version': 1,
@@ -169,6 +169,25 @@ def tasks_create():
     return render_template("create-task.html", title="Create Task")
 
 
+@app.route('/tasks/modify', methods=['PUT'])
+def tasks_modify():
+    """Modify the selected tasks"""
+    mods = request.form.get("mods")
+    task_ids = [int(t) for t in request.form.getlist("selected_task_ids")]
+
+    command = TaskCommand(
+        "modify", 
+        filter=[",".join(str(t) for t in task_ids)],
+        mods=shlex.split(mods)
+    )
+    result = command.run()
+    flash(result.decode("utf-8"))
+
+    return_url = request.headers.get("Referer")
+    response = make_response('', 204)
+    response.headers['HX-Redirect'] = return_url
+    return response
+
 @app.route('/tasks/complete', methods=['PUT'])
 def tasks_complete():
     """Mark the given tasks as complete."""
@@ -178,9 +197,10 @@ def tasks_complete():
     result = command.run()
     flash(result.decode("utf-8"))
 
-    command = TaskCommand("export", mods=["next"])
-    items = parse_tasks(command.run())
-    return render_template("index.html", data=items, relative_date=relative_date, title="Next Tasks")
+    return_url = request.headers.get("Referer")
+    response = make_response('', 204)
+    response.headers['HX-Redirect'] = return_url
+    return response
 
 
 @app.route('/tasks/add', methods=['POST'])

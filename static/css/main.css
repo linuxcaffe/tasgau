@@ -34,6 +34,7 @@
 * {
     margin: 0;
     padding: 0;
+    min-height: 0;
     box-sizing: border-box;
 }
 
@@ -63,7 +64,6 @@ body {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
 }
 
 dialog[open] {
@@ -87,19 +87,22 @@ dialog > div {
     border-radius: 3px;
 }
 
-main {
-    padding: 0.5em;
-    flex-grow: 1;
-}
 
 header {
     color: white;
     background: var(--fg-accent);
     padding: 1em 2em;
+    /* height: 5em; */
 }
 
-.content {
-    max-height: 100%;
+main {
+    padding: 0.5em;
+    min-height: 0;
+    max-height: calc(100vh - 5em);
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
 }
 
 form.form-grid {
@@ -123,6 +126,8 @@ form.form-grid button {
 
 .table-actions {
     display: flex;
+    flex-direction: column;
+    gap: 1em;
     justify-content: space-between;
     background: var(--bg-sidebar);
     color: var(--fg-sidebar);
@@ -131,7 +136,8 @@ form.form-grid button {
 }
 
 .table-container {
-    max-height: 80vh;
+    flex: 1;
+    min-height: 0;
     overflow: auto;
 }
 
@@ -229,6 +235,10 @@ tbody tr:last-child td {
     .id-col {display: table-cell; width: 40px;}
     .age-col {display: table-cell; width: 80px;}
     .project-col {display: table-cell; width: 80px;}
+
+    .table-actions {
+        flex-direction: row;
+    }
 
     form.form-grid {
         grid-template-columns: auto auto 1fr;

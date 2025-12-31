@@ -14,20 +14,25 @@
     <header>
       <h1>Tasgau {%- if title %} | <span style="font-size: 0.8rem;">{{ title }}</span> {%- endif %}</h1>
     </header>
-    <main>
-      {% with messages = get_flashed_messages() %}
+
+    {% with messages = get_flashed_messages() %}
         {% if messages %}
           {% for message in messages %}
             <div class="flash"><pre>{{ message }}<pre></div>
           {% endfor %}
         {% endif %}
-      {% endwith %}
+    {% endwith %}
 
-      <div class="content">
-        {% block body %} {% endblock %}
-      </div>
-
-      <a id="create-task-btn" href="/tasks/create">+</a>
+    <main>
+      {% block body %} {% endblock %}
     </main>
+
+    <a id="create-task-btn" href="/tasks/create">+</a>
+    <dialog id="task-search">
+      <div>
+        {% include "task-search.html" %}
+      </div>
+    </dialog>
+
   </body>
 </html>

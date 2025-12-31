@@ -70,6 +70,26 @@ class TaskCommand:
 
         return result.stdout
 
+
+class Task:
+    """Represents a task object."""
+
+    def __init__(self, data: dict[str, Any]):
+        self.data = data
+
+    def __getattr__(self, key):
+        if key not in self.data:
+            raise AttributeError(key)
+
+        return self.data[key]
+
+    @classmethod
+    def parse(cls, data):
+        logger.info("%r", data)
+        data['entry'] = parse_dt(data['entry'])
+        return cls(data)
+
+
 def relative_date(dt):
     """Format a datetime as a relative date string."""
 
@@ -109,17 +129,30 @@ def parse_dt(timestamp: str) -> datetime:
 def parse_tasks(data: bytes):
     tasks = []
     for item in json.loads(data):
-        item['entry'] = parse_dt(item['entry'])
-        tasks.append(item)
+        task = Task.parse(item)
+        tasks.append(task)
 
     return tasks
 
 
 @app.route('/')
 def index():
-    command = TaskCommand("export", mods=["next"])
+
+    report = request.args.get("report", "next")
+    query = request.args.get("query", "")
+
+    logger.info("Query: %r", query)
+    command = TaskCommand("export", filter=shlex.split(query), mods=[report])
+
     items = parse_tasks(command.run())
-    return render_template("index.html", data=items, relative_date=relative_date, title="Next Tasks")
+    return render_template(
+        "index.html",
+        data=items,
+        relative_date=relative_date,
+        report=report,
+        query=query,
+        title=f"{report.capitalize()} Tasks",
+    )
 
 
 @app.route('/task/<task_id>')

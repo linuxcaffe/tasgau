@@ -2,8 +2,8 @@
     --bg-main: white;
     --fg-main: black;
 
-    --bg-sidebar: #161b22;
-    --fg-sidebar: white;
+    --bg-sidebar: #eceaea;
+    --fg-sidebar: black;
 
     --highlight-color: #f0b100;
     --border-color: #657b83;
@@ -20,8 +20,8 @@
         --bg-hover: #222;
         --fg-main: white;
 
-        /* --bg-sidebar: #161b22; */
-        /* --fg-sidebar: white; */
+        --bg-sidebar: #161b22;
+        --fg-sidebar: white;
 
         --border-color: #839496;
 
@@ -38,6 +38,23 @@
 }
 
 a { color: var(--fg-accent);}
+
+input,
+select {
+
+    border-radius: 3px;
+    padding: 0.5em 1em;
+    color: var(--fg-main);
+    background: var(--bg-main);
+}
+
+button {
+    padding: 0.5em 1em;
+    background: var(--bg-main);
+    color: var(--fg-accent);
+    border: solid 1px var(--fg-accent);
+    border-radius: 3px;
+}
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
@@ -64,6 +81,34 @@ header {
     max-height: 100%;
 }
 
+form.form-grid {
+    display: grid;
+    gap: 0.5em;
+    grid-template-columns: auto auto;
+    align-items: baseline;
+}
+
+form.form-grid label {
+    grid-column: 1;
+}
+
+form.form-grid :not(label) {
+    grid-column: 2;
+}
+
+form.form-grid button {
+    justify-self: flex-end;
+}
+
+.table-actions {
+    display: flex;
+    justify-content: space-between;
+    background: var(--bg-sidebar);
+    color: var(--fg-sidebar);
+    padding: 0.5em;
+    border-bottom: solid 1px var(--border-color);
+}
+
 .table-container {
     max-height: 80vh;
     overflow: auto;
@@ -77,7 +122,8 @@ table {
 thead {
     position: sticky;
     top: 0;
-    background: var(--bg-main);
+    background: var(--bg-sidebar);
+    color: var(--fg-sidebar);
 }
 
 th {
@@ -90,6 +136,10 @@ th {
 td {
     padding: 12px 15px;
     border-bottom: 1px solid #dee2e6;
+}
+
+tr[data-status="completed"] p.description {
+    text-decoration: line-through;
 }
 
 tbody tr:hover {
@@ -106,11 +156,13 @@ tbody tr:last-child td {
 }
 
 .flash {
-    background: lightgreen;
-    border-bottom: solid 1px green;
+    background: var(--fg-accent);
+    border: solid 1px var(--fg-accent-dim);
     color: black;
     width: 100%;
     text-align: center;
+    margin: 1em 0;
+    padding: 1em;
 }
 
 .pill {
@@ -118,9 +170,10 @@ tbody tr:last-child td {
     gap: 0.25em;
     padding: 0.25em 0.5em;
     font-size: 0.8rem;
-    background: var(--fg-accent-dim);
+    background: var(--fg-accent);
+    color: white;
     border-radius: 4px;
-    border: solid 1px var(--fg-accent);
+    border: solid 1px var(--fg-accent-bright);
 }
 
 .pill .icon svg {
@@ -155,4 +208,8 @@ tbody tr:last-child td {
     .id-col {display: table-cell; width: 40px;}
     .age-col {display: table-cell; width: 80px;}
     .project-col {display: table-cell; width: 80px;}
+
+    form.form-grid {
+        grid-template-columns: auto auto 1fr;
+    }
 }

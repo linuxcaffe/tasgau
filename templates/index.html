@@ -1,54 +1,85 @@
 {% extends "layout.html" %}
 {% block body %}
-<form>
-  <div class="table-actions">
-    <button hx-put="/tasks/complete"
-            hx-target="body">Done</button>
-  </div>
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th class="id-col">ID</th>
-          <th class="age-col">Created</th>
-          <th class="project-col">Project</th>
-          <th>Task</th>
-        </tr>
-      </thead>
-      <tbody id="table-body">
-        {% for task in data %}
-        <tr>
-          <td>
-            <input type="checkbox"
-                   name="selected_task_ids"
-                   value="{{ task.id }}">
-          </td>
-          <td class="id-col"><a href="/task/{{ task.id }}">{{ task.id }}</a></td>
-          <td class="age-col">{{ relative_date(task.entry) }}</td>
-          <td class="project-col">
-            {%- if task.project %}
-            <p class="pill">
-              <span class="icon">{% include "svg/list.svg" %} </span>
-              <span>{{ task.project }}</span>
-            </p>
-            {%- endif %}
-          </td>
-          <td>
-            <p class="description">{{ task.description }}</p>
-            {%- if task.tags %}
-            {%- for tag in task.tags %}
-            <p class="pill">
-              <span class="icon">{% include "svg/tag.svg" %} </span>
-              <span>{{ tag }}</span>
-            </p>
-            {%- endfor %}
-            {%- endif %}
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-</form>
+<div>
+  <h3>Search</h3>
+  <form class="form-grid" action="/" method="GET">
+      <label for="search-query">Query</label>
+      <input id="search-query"
+             type="search"
+             name="query"
+             placeholder="Search tasks..."
+             {%- if query %}value="{{ query }}" {%- endif %}
+             />
+      <label for="search-report">Report</label>
+      <select id="search-report" name="report">
+        {%- for name in ['next', 'all'] %}
+        <option value="{{ name }}" {%- if name == report %}selected{%- endif %}>{{ name.capitalize() }}</option>
+        {%- endfor %}
+      </select>
+      <button type="submit">Search</button>
+  </form>
+</div>
+
+<div style="margin-top: 4em">
+  <h3 style="margin-bottom: 2em">Results</h3>
+  <form hx-on::after-request="if(event.detail.successful) this.reset()">
+    <div class="table-actions">
+
+      <div>
+        <input type="text" name="mods" placeholder="Modifiers..." />
+        <button hx-put="/tasks/modify">
+          Edit Selection
+        </button>
+      </div>
+
+      <button hx-put="/tasks/complete"
+              hx-target="body">Mark Done</button>
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th></th>
+            <th class="id-col">ID</th>
+            <th class="age-col">Created</th>
+            <th class="project-col">Project</th>
+            <th>Task</th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+          {% for task in data %}
+          <tr data-status="{{ task.status }}">
+            <td>
+              <input type="checkbox"
+                     name="selected_task_ids"
+                     value="{{ task.id }}">
+            </td>
+            <td class="id-col"><a href="/task/{{ task.id }}">{{ task.id }}</a></td>
+            <td class="age-col">{{ relative_date(task.entry) }}</td>
+            <td class="project-col">
+              {%- if task.project %}
+              <p class="pill">
+                <span class="icon">{% include "svg/list.svg" %} </span>
+                <span>{{ task.project }}</span>
+              </p>
+              {%- endif %}
+            </td>
+            <td>
+              <p class="description">{{ task.description }}</p>
+              {%- if task.tags %}
+              {%- for tag in task.tags %}
+              <p class="pill">
+                <span class="icon">{% include "svg/tag.svg" %} </span>
+                <span>{{ tag }}</span>
+              </p>
+              {%- endfor %}
+              {%- endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </form>
+</div>
 {% endblock %}
